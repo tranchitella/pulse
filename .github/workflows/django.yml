@@ -1,0 +1,107 @@
+name: Django CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  qa-checks:
+    runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: '3.12'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Restore pip & venv cache
+        id: pip-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            .venv
+          key: ${{ runner.os }}-venv-py${{ env.PYTHON_VERSION }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-venv-py${{ env.PYTHON_VERSION }}-
+
+      - name: Install dependencies (only if cache miss)
+        if: steps.pip-cache.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run QA checks
+        run: |
+          source .venv/bin/activate
+          make check-qa
+
+  tests:
+    runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: '3.12'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Restore pip & venv cache
+        id: pip-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            .venv
+          key: ${{ runner.os }}-venv-py${{ env.PYTHON_VERSION }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-venv-py${{ env.PYTHON_VERSION }}-
+
+      - name: Install dependencies (only if cache miss)
+        if: steps.pip-cache.outputs.cache-hit != 'true'
+        run: |
+          python -m venv .venv
+          source .venv/bin/activate
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Run Django tests with coverage
+        run: |
+          source .venv/bin/activate
+          export SQL_ENGINE=django.db.backends.sqlite3
+          export SQL_NAME=$(pwd)/db.sqlite3
+          export DEBUG=1
+          coverage run manage.py test
+
+      - name: Generate coverage report
+        run: |
+          source .venv/bin/activate
+          coverage xml
+          coverage report
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          files: ./coverage.xml
+          fail_ci_if_error: true
+          token: ${{ secrets.CODECOV_TOKEN }}
+
+      - name: Upload coverage artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: .coverage
