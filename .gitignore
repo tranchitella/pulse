@@ -1,0 +1,13 @@
+*.pyc
+__pycache
+.coverage
+.env.db
+.env.dev
+.env.prod
+.env.local
+.venv/
+*/mediafiles/*
+*/staticfiles/*
+celery-results.sqlite3
+db.sqlite3
+data/
