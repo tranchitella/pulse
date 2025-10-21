@@ -11,6 +11,8 @@ on:
 jobs:
   qa-checks:
     runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: '3.12'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -18,14 +20,23 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Create virtual environment
+      - name: Restore pip & venv cache
+        id: pip-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            .venv
+          key: ${{ runner.os }}-venv-py${{ env.PYTHON_VERSION }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-venv-py${{ env.PYTHON_VERSION }}-
+
+      - name: Install dependencies (only if cache miss)
+        if: steps.pip-cache.outputs.cache-hit != 'true'
         run: |
           python -m venv .venv
-
-      - name: Install dependencies
-        run: |
           source .venv/bin/activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
@@ -37,6 +48,8 @@ jobs:
 
   tests:
     runs-on: ubuntu-latest
+    env:
+      PYTHON_VERSION: '3.12'
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -44,14 +57,23 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.12'
+          python-version: ${{ env.PYTHON_VERSION }}
 
-      - name: Create virtual environment
+      - name: Restore pip & venv cache
+        id: pip-cache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.cache/pip
+            .venv
+          key: ${{ runner.os }}-venv-py${{ env.PYTHON_VERSION }}-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-venv-py${{ env.PYTHON_VERSION }}-
+
+      - name: Install dependencies (only if cache miss)
+        if: steps.pip-cache.outputs.cache-hit != 'true'
         run: |
           python -m venv .venv
-
-      - name: Install dependencies
-        run: |
           source .venv/bin/activate
           python -m pip install --upgrade pip
           pip install -r requirements.txt
