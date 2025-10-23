@@ -50,6 +50,20 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PYTHON_VERSION: '3.12'
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_USER: postgres
+          POSTGRES_DB: test_db
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -81,8 +95,12 @@ jobs:
       - name: Run Django tests with coverage
         run: |
           source .venv/bin/activate
-          export SQL_ENGINE=django.db.backends.sqlite3
-          export SQL_NAME=$(pwd)/db.sqlite3
+          export SQL_ENGINE=django_tenants.postgresql_backend
+          export SQL_DATABASE=test_db
+          export SQL_USER=postgres
+          export SQL_PASSWORD=postgres
+          export SQL_HOST=localhost
+          export SQL_PORT=5432
           export DEBUG=1
           coverage run manage.py test
 
