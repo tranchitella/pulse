@@ -1,18 +1,19 @@
 from django.contrib import admin
 from django_tenants.admin import TenantAdminMixin
+from unfold.admin import ModelAdmin
 
 from tenants.models import Domain, Tenant, User
 
 
-class TenantAdmin(TenantAdminMixin, admin.ModelAdmin):
+class TenantAdmin(TenantAdminMixin, ModelAdmin):
     list_display = ["schema_name", "name", "created", "modified"]
 
 
-class DomainAdmin(admin.ModelAdmin):
+class DomainAdmin(ModelAdmin):
     list_display = ["domain", "tenant", "is_primary", "created_at", "updated_at"]
 
 
-class UserAdmin(admin.ModelAdmin):
+class UserAdmin(ModelAdmin):
     list_display = ["id", "email", "is_active"]
     list_display_links = ["id", "email"]
     search_fields = ["email"]
