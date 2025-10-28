@@ -144,12 +144,22 @@ class Command(BaseCommand):
                     Permission.objects.get(codename="view_group"),
                 )
 
+                # Create a tenant-specific User and Group Manager group
+                api_keys_manager_group = Group.objects.create(name="API Keys Manager")
+                api_keys_manager_group.permissions.add(
+                    Permission.objects.get(codename="add_apikey"),
+                    Permission.objects.get(codename="change_apikey"),
+                    Permission.objects.get(codename="delete_apikey"),
+                    Permission.objects.get(codename="view_apikey"),
+                )
+
                 # Link the user to the tenant and assign the tenant-specific group
                 user_permissions = UserTenantPermissions.objects.filter(
                     profile=tenant_owner
                 ).first()
                 user_permissions.groups.add(device_manager_group)
                 user_permissions.groups.add(user_manager_group)
+                user_permissions.groups.add(api_keys_manager_group)
                 user_permissions.save()
 
             # Add the root user to the tenant
