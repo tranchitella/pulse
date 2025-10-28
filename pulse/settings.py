@@ -85,7 +85,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "pulse.urls"
-PUBLIC_SCHEMA_URLCONF = "pulse.urls_public"
 
 TEMPLATES = [
     {
