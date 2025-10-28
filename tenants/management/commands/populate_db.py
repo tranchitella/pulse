@@ -144,7 +144,7 @@ class Command(BaseCommand):
                     Permission.objects.get(codename="view_group"),
                 )
 
-                # Create a tenant-specific User and Group Manager group
+                # Create a tenant-specific API Keys Manager group
                 api_keys_manager_group = Group.objects.create(name="API Keys Manager")
                 api_keys_manager_group.permissions.add(
                     Permission.objects.get(codename="add_apikey"),
