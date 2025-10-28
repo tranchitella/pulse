@@ -51,6 +51,8 @@ SHARED_APPS = [
     "django.contrib.staticfiles",
     "tenant_users.permissions",
     "tenant_users.tenants",
+    "rest_framework",
+    "drf_spectacular",
     "tenants.apps.TenantsConfig",
 ]
 
@@ -62,6 +64,7 @@ TENANT_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "tenant_users.permissions",
+    "rest_framework_api_key",
     "registry.apps.RegistryConfig",
 ]
 
@@ -82,7 +85,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "pulse.urls"
-PUBLIC_SCHEMA_URLCONF = "pulse.urls_public"
 
 TEMPLATES = [
     {
@@ -198,3 +200,20 @@ BASE_DOMAIN = "localhost"
 PUBLIC_SCHEMA_NAME = "public"
 
 TENANT_USERS_DOMAIN = BASE_DOMAIN
+SHOW_PUBLIC_IF_NO_TENANT_FOUND = False
+
+# DRF settings
+
+REST_FRAMEWORK = {
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_VERSIONING_CLASS": "rest_framework.versioning.NamespaceVersioning",
+    "PAGE_SIZE": 20,
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "pulse",
+    "DESCRIPTION": "Pulse IoT Platform",
+    "VERSION": "1.0",
+    "SERVE_INCLUDE_SCHEMA": True,
+}
