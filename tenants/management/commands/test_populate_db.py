@@ -37,11 +37,15 @@ class PopulateDBCommandTest(TestCase):
     @patch("tenants.management.commands.populate_db.call_command")
     @patch("tenants.management.commands.populate_db.create_public_tenant")
     @patch("tenants.management.commands.populate_db.provision_tenant")
-    @patch("tenants.management.commands.populate_db.UserTenantPermissions.objects.filter")
+    @patch(
+        "tenants.management.commands.populate_db.UserTenantPermissions.objects.filter"
+    )
+    @patch("builtins.open", new_callable=MagicMock)
     @patch("json.load")
     def test_command_executes_successfully(
         self,
         mock_json_load,
+        mock_open,
         mock_user_permissions_filter,
         mock_provision,
         mock_create_public,
@@ -68,7 +72,9 @@ class PopulateDBCommandTest(TestCase):
         # Ensure UserTenantPermissions.objects.filter(...).first() returns an object
         mock_user_permissions = Mock()
         mock_user_permissions.groups = Mock()
-        mock_user_permissions_filter.return_value.first.return_value = mock_user_permissions
+        mock_user_permissions_filter.return_value.first.return_value = (
+            mock_user_permissions
+        )
 
         mock_conn = MagicMock()
         mock_connect.return_value = mock_conn
@@ -86,8 +92,9 @@ class PopulateDBCommandTest(TestCase):
         self.assertIn("successfully", out.getvalue())
 
     @patch("tenants.management.commands.populate_db.connect")
+    @patch("builtins.open", new_callable=MagicMock)
     @patch("json.load")
-    def test_drop_and_recreate_db(self, mock_json_load, mock_connect):
+    def test_drop_and_recreate_db(self, mock_json_load, mock_open, mock_connect):
         mock_json_load.return_value = self.mock_tenants_data
 
         mock_conn = MagicMock()
