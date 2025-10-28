@@ -14,6 +14,7 @@ django-auditlog==3.3.0
 django-cid==3.0
 django-tenant-users==2.2.1
 django-tenants==3.9.0
+django-unfold==0.69.0
 djangorestframework==3.16.1
 djangorestframework-api-key==3.1.0
 drf-spectacular==0.28.0

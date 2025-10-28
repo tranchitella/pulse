@@ -1,11 +1,12 @@
 from auditlog.mixins import AuditlogHistoryAdminMixin
 from django.contrib import admin
+from unfold.admin import ModelAdmin
 
 from .models import Device
 
 
 @admin.register(Device)
-class DeviceAdmin(AuditlogHistoryAdminMixin, admin.ModelAdmin):
+class DeviceAdmin(AuditlogHistoryAdminMixin, ModelAdmin):
     list_display = (
         "id",
         "name",

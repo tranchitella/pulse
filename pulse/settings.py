@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 import os
 from pathlib import Path
 
+from django.utils.translation import gettext_lazy as _
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -42,6 +44,7 @@ CSRF_TRUSTED_ORIGINS = (
 # Application definition
 
 SHARED_APPS = [
+    "unfold",
     "django_tenants",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -79,6 +82,7 @@ MIDDLEWARE = [
     "django_tenants.middleware.main.TenantMainMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -172,13 +176,33 @@ AUTHENTICATION_BACKENDS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en"
+
+LANGUAGES = (
+    ("en", _("English")),
+    ("es", _("Español")),
+    ("fr", _("Français")),
+    ("de", _("Deutsch")),
+    ("it", _("Italiano")),
+)
 
 TIME_ZONE = "UTC"
 
 USE_I18N = True
 
 USE_TZ = True
+
+UNFOLD = {
+    "SITE_TITLE": "Pulse",
+    "SITE_HEADER": "Pulse IoT",
+    "SITE_SUBHEADER": "Administration",
+    "SITE_URL": "/admin/",
+    "SHOW_LANGUAGES": True,
+    "SHOW_VIEW_ON_SITE": False,
+    "LOGIN": {
+        "image": lambda request: "https://picsum.photos/1024/768?random=1&grayscale",
+    },
+}
 
 
 # Static files (CSS, JavaScript, Images)
