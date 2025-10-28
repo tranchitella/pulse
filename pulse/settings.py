@@ -51,12 +51,14 @@ SHARED_APPS = [
     "django.contrib.staticfiles",
     "tenant_users.permissions",
     "tenant_users.tenants",
+    "cid.apps.CidAppConfig",
     "rest_framework",
     "drf_spectacular",
     "tenants.apps.TenantsConfig",
 ]
 
 TENANT_APPS = [
+    "auditlog",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -73,6 +75,7 @@ INSTALLED_APPS = list(SHARED_APPS) + [
 ]
 
 MIDDLEWARE = [
+    "cid.middleware.CidMiddleware",
     "django_tenants.middleware.main.TenantMainMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -82,6 +85,7 @@ MIDDLEWARE = [
     "tenant_users.tenants.middleware.TenantAccessMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "auditlog.middleware.AuditlogMiddleware",
 ]
 
 ROOT_URLCONF = "pulse.urls"
@@ -102,6 +106,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = "pulse.wsgi.application"
+
+AUDITLOG_CID_GETTER = "cid.locals.get_cid"
+CID_GENERATE = True
 
 
 # Database
