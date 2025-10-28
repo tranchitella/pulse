@@ -202,6 +202,10 @@ UNFOLD = {
     "LOGIN": {
         "image": lambda request: "https://picsum.photos/1024/768?random=1&grayscale",
     },
+    "SIDEBAR": {
+        "show_search": True,
+        "show_all_applications": True,
+    },
 }
 
 
