@@ -10,6 +10,8 @@ click-plugins==1.1.1.2
 click-repl==0.3.0
 coverage==7.11.0
 Django==5.2.7
+django-auditlog==3.3.0
+django-cid==3.0
 django-tenant-users==2.2.1
 django-tenants==3.9.0
 djangorestframework==3.16.1
