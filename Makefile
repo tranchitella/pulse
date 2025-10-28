@@ -10,7 +10,7 @@ BLACK := $(VENV)/bin/black
 BLACK_CHECK_OPTS := --check
 ISORT := $(VENV)/bin/isort --profile=black
 ISORT_CHECK_OPTS := --check-only
-SRC := pulse
+SRC := pulse registry tenants
 
 # Default target
 .PHONY: all
